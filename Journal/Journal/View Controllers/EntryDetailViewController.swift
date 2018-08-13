@@ -13,28 +13,44 @@ class EntryDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        updateViews()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     @IBAction func save(_ sender: Any) {
+        guard let title = titleTextField.text,
+            let bodyText = bodyTextField.text else { return }
+        if entry != nil {
+            if let entry = entry {
+                entryController?.update(entry: entry, title: title, bodyText: bodyText)
+            }
+        } else {
+            entryController?.createEntry(withTitle: title, bodyText: bodyText)
+        }
+        navigationController?.popViewController(animated: true)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    private func updateViews() {
+        if isViewLoaded {
+            if entry != nil {
+                if let entry = entry {
+                    title = entry.title
+                    titleTextField.text = entry.title
+                    bodyTextField.text = entry.bodyText
+                }
+            } else {
+                title = "Create Entry"
+            }
+        }
     }
-    */
     
     // MARK: - Properties
+    
+    var entry: Entry? {
+        didSet {
+            updateViews()
+        }
+    }
+    var entryController: EntryController?
     
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var bodyTextField: UITextView!

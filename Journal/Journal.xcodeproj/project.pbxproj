@@ -68,10 +68,10 @@
 			children = (
 				F827618221220F7A001E78AC /* AppDelegate.swift */,
 				F827618621220F7A001E78AC /* Main.storyboard */,
-				F8737AB621221A3100362CC0 /* Model Controller */,
 				F827619E212216EB001E78AC /* Model */,
-				F8276199212213EF001E78AC /* Cells */,
+				F8737AB621221A3100362CC0 /* Model Controller */,
 				F8276196212212BB001E78AC /* View Controllers */,
+				F8276199212213EF001E78AC /* Cells */,
 				F827618921220F7B001E78AC /* Assets.xcassets */,
 				F827618B21220F7B001E78AC /* LaunchScreen.storyboard */,
 				F827618E21220F7B001E78AC /* Info.plist */,
