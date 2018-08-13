@@ -16,13 +16,13 @@ class EntryController {
     func saveToPersistentStore() {
         do {
             let moc = CoreDataStack.shared.mainContext
-            moc.save()
+            try moc.save()
         } catch {
             NSLog("Error saving managed oject context: \(error)")
         }
     }
     
-    func loadFromPersistentStore() -> Entry {
+    func loadFromPersistentStore() -> [Entry] {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
         let moc = CoreDataStack.shared.mainContext
         do {
@@ -35,10 +35,27 @@ class EntryController {
     
     // MARK: - CRUD
     
+    func createEntry(withTitle title: String, bodyText: String) {
+        let entry = Entry(title: title, bodyText: bodyText)
+        saveToPersistentStore()
+    }
+    
+    func update(entry: Entry, title: String, bodyText: String) {
+        entry.title = title
+        entry.bodyText = bodyText
+        entry.timestamp = Date()
+        saveToPersistentStore()
+    }
+    
+    func delete(entry: Entry) {
+        let moc = CoreDataStack.shared.mainContext
+        moc.delete(entry)
+        saveToPersistentStore()
+    }
     
     // MARK: - Properties
     
     var entries: [Entry] {
-        loadFromPersistentStore()
+        return loadFromPersistentStore()
     }
 }
