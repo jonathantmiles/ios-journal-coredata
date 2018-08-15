@@ -33,17 +33,6 @@ class EntriesTableViewController: UITableViewController {
         
         cell.entry = entryController.entries[indexPath.row]
         
-        /* ~~~ unnecessary duplication ~~~
-        let entry = entryController.entries[indexPath.row]
-        cell.titleLabel.text = entry.title
-        cell.bodyLabel.text = entry.bodyText
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM dd, yyyy"
-        let prettyDate = formatter.string(from: entry.timestamp!)
-        cell.timestampLabel.text = prettyDate
-        */
-        
         return cell
     }
 
@@ -51,16 +40,7 @@ class EntriesTableViewController: UITableViewController {
         if editingStyle == .delete {
             
             let entry = entryController.entries[indexPath.row]
-            let moc = CoreDataStack.shared.mainContext
-            moc.delete(entry)
-            
-            do {
-                try moc.save()
-            } catch {
-                moc.reset()
-            }
-            
-            tableView.reloadData()
+            entryController.delete(entry: entry)
         }
     }
 
