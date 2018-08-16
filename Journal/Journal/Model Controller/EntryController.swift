@@ -52,11 +52,13 @@ class EntryController {
     
     func saveToPersistentStore() {
         let moc = CoreDataStack.shared.mainContext
-        do {
-            try moc.save()
-        } catch {
-            moc.reset()
-            NSLog("Error saving managed oject context: \(error)")
+        moc.perform {
+            do {
+                try moc.save()
+            } catch {
+                moc.reset()
+                NSLog("Error saving managed oject context: \(error)")
+            }
         }
     }
     
@@ -71,17 +73,20 @@ class EntryController {
         }
     }
     
-    func fetchSingleEntryFromPersistentStore(withID identifier: String) -> Entry? {
+    func fetchSingleEntryFromPersistentStore(withID identifier: String, context: NSManagedObjectContext) -> Entry? {
         let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
-        let moc = CoreDataStack.shared.mainContext
-        do {
-            let entries = try moc.fetch(fetchRequest)
-            return entries.first
-        } catch {
-            NSLog("Error fetching single entry: \(error)")
-            return nil
+        //let moc = CoreDataStack.shared.container.newBackgroundContext()
+    
+        context.performAndWait {
         }
+            do {
+                let entries = try context.fetch(fetchRequest)
+                return entries.first
+            } catch {
+                NSLog("Error fetching single entry: \(error)")
+                return nil
+            }
     }
     
     func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
@@ -95,26 +100,42 @@ class EntryController {
             guard let data = data else { return }
             
             do {
-                var entryReps: [EntryRepresentation] = []
+                // var entryReps: [EntryRepresentation] = []
                 let decodedData = try JSONDecoder().decode([String : EntryRepresentation].self, from: data).values
-                entryReps = Array(decodedData)
-                for entryRep in entryReps {
-                    let entry = self.fetchSingleEntryFromPersistentStore(withID: entryRep.identifier)
-                    if entry != nil {
-                        if entry! == entryRep {
-                        } else if entry! != entryRep {
-                            self.updateEntryRepresentation(with: entry!, entryRepresentation: entryRep)
-                        }
-                    } else {
-                        let _ = Entry(entryRepresentation: entryRep)
-                    }
-                }
-                self.saveToPersistentStore()
+                try self.updateEntries(with: Array(decodedData), context: CoreDataStack.shared.container.newBackgroundContext())
+                
+                // self.saveToPersistentStore() // data is saved in the updateEntries func
                 completion(nil)
             } catch {
                     NSLog("Error snchronizing data:\(error)")
             }
         }.resume()
+    }
+    
+    private func updateEntries(with representations: [EntryRepresentation], context: NSManagedObjectContext) throws {
+        
+        var error: Error?
+        
+        context.performAndWait {
+            for entryRep in representations {
+                let entry = self.fetchSingleEntryFromPersistentStore(withID: entryRep.identifier, context: context)
+                if entry != nil {
+                    if entry! == entryRep {
+                    } else if entry! != entryRep {
+                        self.updateEntryRepresentation(with: entry!, entryRepresentation: entryRep)
+                    }
+                } else {
+                    let _ = Entry(entryRepresentation: entryRep)
+                }
+            }
+            
+            do {
+                try context.save()
+            } catch let saveError {
+                error = saveError
+            }
+        }
+        if let error = error { throw error }
     }
     
     // MARK: - Networking
