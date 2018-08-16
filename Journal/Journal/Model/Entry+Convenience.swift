@@ -29,4 +29,9 @@ extension Entry {
         self.timestamp = timestamp
         self.mood = mood.rawValue
     }
+    
+    convenience init?(entryRepresentation: EntryRepresentation, context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
+        guard let mood = EntryMood(rawValue: entryRepresentation.mood) else { return nil }
+        self.init(title: entryRepresentation.title, bodyText: entryRepresentation.bodyText, timestamp: entryRepresentation.timestamp, identifier: entryRepresentation.identifier, mood: mood, managedObjectContext: context)
+    }
 }

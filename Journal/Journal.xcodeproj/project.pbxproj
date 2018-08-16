@@ -16,6 +16,8 @@
 		F827619B2122158C001E78AC /* EntryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F827619A2122158C001E78AC /* EntryDetailViewController.swift */; };
 		F827619D212216B7001E78AC /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F827619C212216B7001E78AC /* CoreDataStack.swift */; };
 		F82761A121221709001E78AC /* Journal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F827619F21221709001E78AC /* Journal.xcdatamodeld */; };
+		F860E2AC2124E8F500617832 /* Entry+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860E2AB2124E8F500617832 /* Entry+Encodable.swift */; };
+		F860E2AE2124EF1100617832 /* EntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860E2AD2124EF1100617832 /* EntryRepresentation.swift */; };
 		F8737AB32122181400362CC0 /* Entry+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8737AB22122181400362CC0 /* Entry+Convenience.swift */; };
 		F8737AB521221A2D00362CC0 /* EntryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8737AB421221A2D00362CC0 /* EntryController.swift */; };
 /* End PBXBuildFile section */
@@ -32,6 +34,8 @@
 		F827619A2122158C001E78AC /* EntryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryDetailViewController.swift; sourceTree = "<group>"; };
 		F827619C212216B7001E78AC /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		F82761A021221709001E78AC /* Journal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Journal.xcdatamodel; sourceTree = "<group>"; };
+		F860E2AB2124E8F500617832 /* Entry+Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+Encodable.swift"; sourceTree = "<group>"; };
+		F860E2AD2124EF1100617832 /* EntryRepresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryRepresentation.swift; sourceTree = "<group>"; };
 		F8737AB22122181400362CC0 /* Entry+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entry+Convenience.swift"; sourceTree = "<group>"; };
 		F8737AB421221A2D00362CC0 /* EntryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryController.swift; sourceTree = "<group>"; };
 		F8C6252B2123698000908C30 /* Journal 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Journal 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 				F827619C212216B7001E78AC /* CoreDataStack.swift */,
 				F827619F21221709001E78AC /* Journal.xcdatamodeld */,
 				F8737AB22122181400362CC0 /* Entry+Convenience.swift */,
+				F860E2AB2124E8F500617832 /* Entry+Encodable.swift */,
+				F860E2AD2124EF1100617832 /* EntryRepresentation.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -187,9 +193,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				F827619D212216B7001E78AC /* CoreDataStack.swift in Sources */,
+				F860E2AE2124EF1100617832 /* EntryRepresentation.swift in Sources */,
 				F8276198212213EB001E78AC /* EntriesTableViewCell.swift in Sources */,
 				F8276195212212B4001E78AC /* EntriesTableViewController.swift in Sources */,
 				F82761A121221709001E78AC /* Journal.xcdatamodeld in Sources */,
+				F860E2AC2124E8F500617832 /* Entry+Encodable.swift in Sources */,
 				F827619B2122158C001E78AC /* EntryDetailViewController.swift in Sources */,
 				F827618321220F7A001E78AC /* AppDelegate.swift in Sources */,
 				F8737AB521221A2D00362CC0 /* EntryController.swift in Sources */,

@@ -88,15 +88,7 @@ class EntriesTableViewController: UITableViewController, NSFetchedResultsControl
         if editingStyle == .delete {
             
             let entry = fetchedResultsController.object(at: indexPath)
-            let moc = CoreDataStack.shared.mainContext
-            moc.delete(entry)
-            
-            do {
-                try moc.save()
-            } catch {
-                moc.reset()
-            }
-            
+            entryController.delete(entry: entry)
             tableView.reloadData()
         }
     }
