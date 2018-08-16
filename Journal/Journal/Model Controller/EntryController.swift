@@ -11,12 +11,25 @@ import CoreData
 
 class EntryController {
     
+    init() {
+        fetchEntriesFromServer()
+    }
+    
     // MARK: - CRUD
     
     func createEntry(withTitle title: String, bodyText: String, mood: EntryMood) {
         let entry = Entry(title: title, bodyText: bodyText, mood: mood)
         saveToPersistentStore()
         put(entry: entry)
+    }
+    
+    func updateEntryRepresentation(with entry: Entry, entryRepresentation: EntryRepresentation) {
+        entry.title = entryRepresentation.title
+        entry.bodyText = entryRepresentation.bodyText
+        entry.identifier = entryRepresentation.identifier
+        entry.timestamp = entryRepresentation.timestamp
+        entry.mood = entryRepresentation.mood
+        
     }
     
     func update(entry: Entry, title: String, bodyText: String, mood: EntryMood) {
@@ -56,6 +69,52 @@ class EntryController {
             NSLog("Error fetching tasks: \(error)")
             return []
         }
+    }
+    
+    func fetchSingleEntryFromPersistentStore(withID identifier: String) -> Entry? {
+        let fetchRequest: NSFetchRequest<Entry> = Entry.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "identifier == %@", identifier)
+        let moc = CoreDataStack.shared.mainContext
+        do {
+            let entries = try moc.fetch(fetchRequest)
+            return entries.first
+        } catch {
+            NSLog("Error fetching single entry: \(error)")
+            return nil
+        }
+    }
+    
+    func fetchEntriesFromServer(completion: @escaping ((Error?) -> Void) = { _ in }) {
+        let url = baseURL.appendingPathExtension("json")
+        
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
+            if let error = error {
+                NSLog("error fetching multiple entries from server: \(error)")
+                completion(error)
+            }
+            guard let data = data else { return }
+            
+            do {
+                var entryReps: [EntryRepresentation] = []
+                let decodedData = try JSONDecoder().decode([String : EntryRepresentation].self, from: data).values
+                entryReps = Array(decodedData)
+                for entryRep in entryReps {
+                    let entry = self.fetchSingleEntryFromPersistentStore(withID: entryRep.identifier)
+                    if entry != nil {
+                        if entry! == entryRep {
+                        } else if entry! != entryRep {
+                            self.updateEntryRepresentation(with: entry!, entryRepresentation: entryRep)
+                        }
+                    } else {
+                        let _ = Entry(entryRepresentation: entryRep)
+                    }
+                }
+                self.saveToPersistentStore()
+                completion(nil)
+            } catch {
+                    NSLog("Error snchronizing data:\(error)")
+            }
+        }.resume()
     }
     
     // MARK: - Networking
